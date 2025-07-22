@@ -1,7 +1,8 @@
-streamlit==1.35.0
-geopandas==0.14.4
-folium==0.16.0
-streamlit-folium==0.20.0
-shapely==2.0.4
-plotly==5.22.0
-
+streamlit>=1.30
+geopandas>=0.14
+folium>=0.15
+streamlit-folium>=0.18
+plotly>=5.20
+shapely>=2.0
+pandas>=2.2
+kaleido>=0.2.1
