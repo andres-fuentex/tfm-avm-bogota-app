@@ -1,30 +1,32 @@
-# Usa la imagen base oficial de Python 3.10 en versión slim
 FROM python:3.10-slim
 
-# Instala las librerías del sistema necesarias para geopandas, shapely y gdal
-RUN apt-get update && apt-get install -y \
-    gcc \
-    g++ \
-    libgeos-dev \
-    libproj-dev \
-    proj-data \
-    proj-bin \
-    libgdal-dev \
-    gdal-bin \
-    && rm -rf /var/lib/apt/lists/*
-
-# Define el directorio de trabajo en el contenedor
 WORKDIR /app
 
-# Copia todo lo que tienes en tu carpeta local al contenedor
+# Instalar dependencias del sistema necesarias
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    gcc \
+    g++ \
+    libglib2.0-0 \
+    libgl1-mesa-glx \
+    libgdal-dev \
+    libspatialindex-dev \
+    libgeos-dev \
+    libproj-dev \
+    chromium \
+    && rm -rf /var/lib/apt/lists/*
+
+# Instalar Python requirements
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar la app
 COPY . .
 
-# Actualiza pip y luego instala las dependencias del requirements
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-
-# Expone el puerto donde correrá la app (8501 es el de Streamlit)
 EXPOSE 8501
 
-# Comando para ejecutar tu aplicación Streamlit
+# Configurar Chromium para Kaleido (si es necesario)
+ENV KALIEDO_BROWSER_PATH=/usr/bin/chromium
+
 CMD ["streamlit", "run", "avm.py", "--server.port=8501", "--server.address=0.0.0.0"]
+
